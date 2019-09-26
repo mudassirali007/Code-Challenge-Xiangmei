@@ -19,6 +19,7 @@ class CreateDomainsTable extends Migration
             $table->boolean('is_idn')->default(0);
             $table->boolean('is_imprinted')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
