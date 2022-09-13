@@ -72,7 +72,7 @@ Once the application is loaded please visit the *code challange* page for the re
 
 ## How to Return
 
-Please email a zip file of the project to matt@bodis.com
+Please email a zip file of the project to davey@bodis.com
 
 Exclude the following directories:
 
