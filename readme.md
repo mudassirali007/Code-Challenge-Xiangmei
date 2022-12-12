@@ -11,6 +11,26 @@ Thanks for your interest in Bodis and for taking the time to work on our code ch
 3. **npm**@*6.9.0+*
 4. **mysql**@*5.5.7+*
 
+## Setup Environment
+
+Clone repo
+
+```
+git clone https://davey0614@bitbucket.org/bodisteam/code-challenge-full-stack.git code-challenge
+```
+
+Install Docker
+
+```
+cd path/to/code-challenge
+docker-compose up -d
+```
+
+SSH into docker container
+```
+docker exec -ti vue-starter sh
+```
+
 ## Installation
 
 Install the php dependencies using [composer](https://getcomposer.org/):
@@ -35,11 +55,11 @@ Set the following database variables in `.env` file for your development environ
 
 ```
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
+DB_HOST=db
 DB_PORT=3306
-DB_DATABASE=homestead
-DB_USERNAME=homestead
-DB_PASSWORD=secret
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=123456
 ```
 
 Run the database migrations using [artisan](https://laravel.com/docs/5.8/artisan):
@@ -54,16 +74,10 @@ Start hot reloading for the application's interface:
 npm run hot
 ```
 
-Start serving the application:
-
-```
-php artisan serve
-```
-
 Load the application URL in your browser:
 
 ```
-http://localhost:8000
+http://localhost:8008
 ```
 
 ## Get Started
