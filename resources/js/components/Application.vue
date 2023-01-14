@@ -42,9 +42,9 @@
       <v-toolbar-title>Bodis</v-toolbar-title>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
         <slot name="content"></slot>
-    </v-content>
+    </v-main>
 
     <v-footer app>
       <span>Code Challenge</span>
@@ -53,10 +53,7 @@
 </template>
 
 <script>
-  import store from '../store';
-
   export default {
-    store,
     data: () => ({
         drawer: null,
     }),

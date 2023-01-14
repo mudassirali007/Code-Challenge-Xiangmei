@@ -1,6 +1,7 @@
 <template>
     <application>
         <template v-slot:content>
+            <Alert v-if="alert" :type="type" :message="message" @alertTimeout="alert = false"/>
             <v-container class="pa-4" fluid>
                 <v-card>
                     <v-card-title>
@@ -17,7 +18,7 @@
                     </v-card-title>
                     <v-data-table
                         :headers="headers"
-                        :items="domains"
+                        :items="filteredDomains"
                         :loading="loading"
                         hide-default-footer
                         disable-sort
@@ -32,10 +33,10 @@
                                     <td>{{ item.is_idn ? 'Yes' : 'No' }}</td>
                                     <td>{{ item.is_imprinted ? 'Yes' : 'No' }}</td>
                                     <td>
-                                        <v-btn icon @click="handleImprint">
+                                        <v-btn icon @click="handleImprint(item.id,item.is_imprinted ? 0 : 1)">
                                             <v-icon>mdi-fingerprint</v-icon>
                                         </v-btn>
-                                        <v-btn icon @click="handleDelete">
+                                        <v-btn icon @click="handleDelete(item.id)">
                                             <v-icon>mdi-delete</v-icon>
                                         </v-btn>
                                     </td>
@@ -61,6 +62,7 @@
 
 <script>
   import axios from 'axios';
+  import Alert from "./Alert";
 
   export default {
     data () {
@@ -75,19 +77,46 @@
                 { text: 'Actions' }
             ],
             domains: [],
+            alert: false,
+            type: 'success',
+            message: '',
         }
     },
+      computed: {
+          filteredDomains() {
+              let tempDomains = this.domains
+              // Process search input
+              if (this.search != '' && this.search) {
+                  tempDomains = tempDomains.filter((item) => {
+                      return item.domain_name
+                          .includes(this.search)
+                  })
+              }
+              return tempDomains
+          }
+      },
+      components:{
+          Alert
+      },
     mounted() {
         this.fetchDomains();
     },
     methods: {
+        alertPopUp(alert, type, message){
+            this.alert = alert;
+            this.type = type;
+            this.message = message;
+        },
         async fetchDomains() {
             try {
                 this.loading = true;
                 const domains = await axios.get('/api/domains');
                 this.domains = domains.data;
+                this.alertPopUp(true,'success','Listing Successfully.')
+
             }
             catch (e) {
+                this.alertPopUp(true,'error',e)
                 console.log(e);
             }
             finally {
@@ -97,12 +126,58 @@
         handleSearch(value) {
             console.log('handle the search!', value);
         },
-        handleDelete() {
+        async handleDelete(id) {
             console.log('handle the delete!');
+            try {
+                this.loading = true;
+                await axios.delete(`/api/domains/${id}`)
+                    .then((response) => {
+                        this.domains.splice(this.domains.map(item => item.id).indexOf(id), 1)
+                        this.alertPopUp(true,'success','Record Deleted Successfully.')
+                        console.log(response.data)
+                    })
+                    .catch((error) => {
+                        this.alertPopUp(true,'error',error)
+                        console.error(error)
+                    });
+            }
+            catch (e) {
+                this.alertPopUp(true,'error',e)
+                console.error(e);
+            }
+            finally {
+                this.loading = false;
+            }
         },
-        handleImprint() {
+        async handleImprint(id,is_imprinted) {
             console.log('handle the imprint!');
-        },
+            try {
+                this.loading = true;
+                await axios.put(`/api/domains/${id}`, {
+                    is_imprinted: is_imprinted
+                })
+                    .then((response) => {
+                        this.domains = this.domains.map(item => {
+                            if (item.id === id) return {...item, is_imprinted};
+                            return item;
+                        })
+                        this.alertPopUp(true,'success','Record Imprinted Successfully.')
+
+                        console.log(response.data)
+                    })
+                    .catch((error) => {
+                        this.alertPopUp(true,'error',error)
+                        console.error(error)
+                    });
+            }
+            catch (e) {
+                this.alertPopUp(true,'error',e)
+                console.error(e);
+            }
+            finally {
+                this.loading = false;
+            }
+        }
     }
   }
 </script>

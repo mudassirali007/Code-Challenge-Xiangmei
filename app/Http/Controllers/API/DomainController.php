@@ -33,6 +33,14 @@ class DomainController extends Controller
     public function store(Request $request) : Response
     {
         // CODE CHALLENGE: Add Domains
+        $validatedData = $request->validate([
+        'domains' => 'required'
+        ]);
+        $domains = $request->domains;
+        foreach ($domains as $domain) {
+        $domain = Domain::create(['domain_name' => $domain]);
+        }
+        return response(200);
     }
 
     /**
@@ -45,6 +53,13 @@ class DomainController extends Controller
     public function update(Request $request, $id) : Response
     {
         // CODE CHALLENGE: Toggle Imprint
+        $validatedData = $request->validate([
+        'is_imprinted' => 'required|boolean'
+        ]);
+        $domain = Domain::find($id);
+        $domain->is_imprinted = $request->is_imprinted;
+        $domain->save();
+        return response(200);
     }
 
     /**
@@ -56,5 +71,8 @@ class DomainController extends Controller
     public function destroy(int $id) : Response
     {
         // CODE CHALLENGE: Delete Domains
+        $domain = Domain::find($id);
+        $domain->delete();
+        return response(200);
     }
 }

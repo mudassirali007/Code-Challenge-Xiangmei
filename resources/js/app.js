@@ -5,10 +5,12 @@
  */
 
 import Vue from 'vue';
+import store from './store'
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import '@mdi/font/css/materialdesignicons.css';
 import router from './router';
+
 
 Vue.use(Vuetify);
 
@@ -30,6 +32,7 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
  */
 
 const app = new Vue({
+    store,
     router,
     vuetify: new Vuetify(),
     el: '#app',

@@ -11,5 +11,10 @@ export default {
     },
     getters: {
         isDarkMode: state => state.darkMode === true
+    },
+    mutations: {
+        changeMode (state, bool = false) {
+            state.darkMode = bool
+        }
     }
 };

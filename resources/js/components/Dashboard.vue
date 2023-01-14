@@ -1,6 +1,7 @@
 <template>
     <application>
         <template v-slot:content>
+            <Alert v-if="alert" :type="type" :message="message" @alertTimeout="alert = false"/>
             <v-container class="px-4 py-1" fluid>
                 <v-row>
                     <v-col cols="12" sm="6">
@@ -71,6 +72,7 @@
 
 <script>
     import axios from 'axios';
+    import Alert from "./Alert";
 
   export default {
     data () {
@@ -81,20 +83,34 @@
                 trash: 0,
                 internationalized: 0,
                 imprinted: 0
-            }
+            },
+            alert: false,
+            type: 'success',
+            message: '',
         }
     },
+      components:{
+          Alert
+      },
     mounted() {
         this.fetchStats();
     },
     methods: {
+        alertPopUp(alert, type, message){
+            this.alert = alert;
+            this.type = type;
+            this.message = message;
+        },
         async fetchStats() {
             try {
                 this.loading = true;
                 const stats = await axios.get('/api/dashboard/stats');
+                this.alertPopUp(true,'success','Stats Displayed Successfully.')
+
                 this.stats = stats.data;
             }
             catch (e) {
+                this.alertPopUp(true,'error',e)
                 console.log(e);
             }
             finally {
