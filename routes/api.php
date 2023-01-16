@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 /* Added Simple API auth because Laravel sanctum needs users to login */
-Route::group(['middleware' => ['api']], function () {
+Route::group(['middleware' => ['basic']], function () {
     Route::get('/dashboard/stats', 'API\DashboardController@stats');
     Route::get('/domains', 'API\DomainController@index');
     Route::post('/domains', 'API\DomainController@store');
