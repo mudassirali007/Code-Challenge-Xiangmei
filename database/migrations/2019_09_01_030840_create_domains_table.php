@@ -16,7 +16,7 @@ class CreateDomainsTable extends Migration
         Schema::create('domains', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('domain_name', 70);
-            $table->boolean('is_idn')->default(1);
+            $table->boolean('is_idn')->default(0);
             $table->boolean('is_imprinted')->default(0);
             $table->timestamps();
             $table->softDeletes();

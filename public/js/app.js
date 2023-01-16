@@ -1896,8 +1896,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      drawer: null,
-      alert: false
+      drawer: null
     };
   },
   created: function created() {
@@ -2048,6 +2047,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      page: 1,
+      itemsPerPage: 10,
       loading: false,
       search: '',
       headers: [{
@@ -2082,6 +2083,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       }
       return tempDomains;
+    },
+    totalRecords: function totalRecords() {
+      return this.filteredDomains.length;
+    },
+    pageCount: function pageCount() {
+      return Math.ceil(this.totalRecords / this.itemsPerPage);
     }
   },
   components: {
@@ -2961,8 +2968,15 @@ var render = function render() {
             headers: _vm.headers,
             items: _vm.filteredDomains,
             loading: _vm.loading,
+            page: _vm.page,
+            "items-per-page": _vm.itemsPerPage,
             "hide-default-footer": "",
             "disable-sort": ""
+          },
+          on: {
+            "update:page": function updatePage($event) {
+              _vm.page = $event;
+            }
           },
           scopedSlots: _vm._u([{
             key: "body",
@@ -2993,7 +3007,34 @@ var render = function render() {
               }), 0)];
             }
           }])
-        })], 1), _vm._v(" "), _c("v-btn", {
+        }), _vm._v(" "), _c("v-row", {
+          staticClass: "text-center px-4 align-center",
+          attrs: {
+            wrap: ""
+          }
+        }, [_c("v-col", {
+          staticClass: "text-truncate",
+          attrs: {
+            cols: "12",
+            md: "2"
+          }
+        }, [_vm._v("\n                        Total " + _vm._s(_vm.totalRecords) + " records\n                    ")]), _vm._v(" "), _c("v-col", {
+          attrs: {
+            cols: "12",
+            md: "6"
+          }
+        }, [_c("v-pagination", {
+          attrs: {
+            length: _vm.pageCount
+          },
+          model: {
+            value: _vm.page,
+            callback: function callback($$v) {
+              _vm.page = $$v;
+            },
+            expression: "page"
+          }
+        })], 1)], 1)], 1), _vm._v(" "), _c("v-btn", {
           attrs: {
             fab: "",
             color: "primary",

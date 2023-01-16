@@ -20,6 +20,8 @@
                         :headers="headers"
                         :items="filteredDomains"
                         :loading="loading"
+                        :page.sync="page"
+                        :items-per-page="itemsPerPage"
                         hide-default-footer
                         disable-sort
                     >
@@ -44,6 +46,17 @@
                             </tbody>
                         </template>
                     </v-data-table>
+                    <v-row class="text-center px-4 align-center" wrap>
+                        <v-col class="text-truncate" cols="12" md="2">
+                            Total {{ totalRecords }} records
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-pagination
+                                v-model="page"
+                                :length="pageCount">
+                            </v-pagination>
+                        </v-col>
+                    </v-row>
                 </v-card>
                 <v-btn
                     fab
@@ -67,6 +80,8 @@
   export default {
     data () {
         return {
+            page: 1,
+            itemsPerPage: 10,
             loading: false,
             search: '',
             headers: [
@@ -93,7 +108,13 @@
                   })
               }
               return tempDomains
-          }
+          },
+          totalRecords() {
+              return this.filteredDomains.length
+          },
+          pageCount() {
+              return Math.ceil(this.totalRecords / this.itemsPerPage)
+          },
       },
       components:{
           Alert
